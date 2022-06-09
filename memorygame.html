@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Color Spotter Game</title>
+    <style>
+        #game {
+            font-size: xxx-large;
+            margin: auto auto !important;
+            background: beige;
+            cursor: pointer !important;
+        }
+
+        #score-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 35%;
+
+        }
+
+        .shake {
+            animation: shake 0.8s infinite;
+            transform: translate3d(0, 0, 0);
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            margin: auto auto !important;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translateX(-8px);
+            }
+
+            20%,
+            40%,
+            60%,
+            80%,
+            100% {
+                transform: translateX(8px);
+            }
+        }
+
+        @keyframes blink {
+            0% {
+                background-color: rgb(107, 83, 241);
+            }
+
+            100% {
+                background-color: beige;
+            }
+        }
+
+        #overlay {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        #text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 50px;
+            color: darkgreen;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            font-weight: 800;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="score-container">
+        <span><strong>Memory Game</strong> :memorize and click the correct boxes in sequence (click start)</span>
+    </div>
+    <div id="score-container">
+        <span>Score:<bold id="score">0</bold></span>
+        <span>Highscore:<bold id="highScore">0</bold></span>
+    </div>
+    <div id="game"></div>
+    <div id="score-container">
+        <button id="btn-container">start</button>
+    </div>
+    <div id="overlay">
+        <div id="text">
+            <p>Observe the blinks</p>
+        </div>
+    </div>
+
+</body>
+<script>
+    let boxes = 5;
+    let highLightCount = 0;
+    let score = 0;
+    let highScore = localStorage.getItem("highScore") || 0;
+    let highLtArr = [];
+    let highLtArrCont = [];
+    const btn = document.querySelector('button');
+    btn.onclick = () => {
+        overlayOn();
+        blinkBoxes();
+    }
+
+    function PixelArt(el, rows, cols) {
+        boxes = cols;
+        const game = document.querySelector(el);
+        game.style.display = "grid";
+        game.style.grid = new Array(rows).fill("auto").join(' ') + "/" + new Array(cols).fill("auto").join(' ');
+        game.style.gap = "0";
+        game.style.maxWidth = (cols * 100) + "px";
+        game.style.minHeight = "100px";
+        for (let c = 0; c < cols; c++) {
+            let div = document.createElement('div');
+            div.setAttribute('id', c);
+            div.style.border = "1px solid black";
+            div.onclick = (event) => {
+                if (!highLtArrCont.length) return;
+                let id = highLtArrCont.pop();
+
+                console.log(event.target.id, id)
+                if (event.target.id == id) {
+                    score++;
+                    setScore();
+                    if (!highLtArrCont.length) {
+                        highScore = highScore < score ? score : highScore;
+                        setScore();
+                        overlayOn();
+                        blinkBoxes();
+                    }
+                } else {
+                    highScore = highScore < score ? score : highScore;
+                    score = 0;
+                    setScore();
+                    game.style.animation = `shake 0.8s`;
+                    btn.disabled = false;
+                }
+            }
+            div.onanimationend = (event) => {
+                event.target.style.animation = "none";
+                Animate();
+            }
+            game.append(div);
+        }
+    }
+    new PixelArt('#game', 1, 5);
+
+    game.onanimationend = (event) => {
+        game.style.animation = "none";
+    }
+
+
+
+    function blinkBoxes() {
+        highLightCount = Math.floor(Math.random() * 3);
+        for (i = 0; i <= highLightCount; i++) {
+            highLtArr.push(Math.floor(Math.random() * boxes));
+        }
+        btn.disabled = true;
+        highLtArrCont = [...highLtArr];
+        console.log(highLtArrCont)
+        Animate();
+    }
+
+    function Animate() {
+        if (highLtArr.length <= 0) {
+            overlayOff();
+            return;
+        }
+        let id = highLtArr.pop();
+        let count = getCount(id);
+        console.log(id, highLtArr)
+        document.getElementById(id).style.animation = `blink 1s linear ${count}`;
+    }
+
+    function getCount(id) {
+        let count = 1;
+        for (i = highLtArr.length - 1; i >= 0; i--) {
+            if (highLtArr[i] == id) {
+                highLtArr.pop();
+                count++;
+            } else {
+                break;
+            }
+        }
+        return count;
+    }
+
+    function setScore() {
+        document.getElementById("score").innerText = score;
+        document.getElementById("highScore").innerText = highScore;
+        localStorage.setItem("highScore", highScore);
+
+    }
+    setScore();
+
+    function overlayOn() {
+        document.getElementById("overlay").style.display = "block";
+    }
+
+    function overlayOff() {
+        document.getElementById("overlay").style.display = "none";
+
+    }
+
+
+</script>
+
+</html>

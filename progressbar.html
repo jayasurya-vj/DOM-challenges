@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Progress Bar</title>
+    <style>
+        section{
+            
+            display: flex;
+            align-content: center;
+            flex-flow:column wrap;
+        }
+        #bar{
+            width:800px;
+            height:60px;
+            background-color: rgb(215, 211, 211);
+            margin:40px auto;
+            
+        }
+        #progress{
+            width:0%;
+            background-color: rgb(107, 83, 241);
+            height:100%;
+        }
+        .progress{            
+            animation-name: progress;
+            animation-duration: 3s;
+            animation-iteration-count: 1;
+            animation-timing-function: linear;
+        }
+        @keyframes progress {
+            0%   {width:0%; background-color: rgb(107, 83, 241);}
+            100% {width:100%; background-color: rgb(107, 83, 241);}
+        }
+    </style>  
+</head>
+<body>
+<section>
+    
+   <div id="bar">
+       <div id="progress"></div>
+   </div>
+   <div>
+    <button>Run</button>
+    click N times to animate N times
+   </div>
+</section>
+</body>
+<script> 
+   let count;  
+   const btn = document.querySelector('button');
+   const progBar=document.querySelector("#progress");
+   btn.onclick=(event)=>{
+    count=event.detail;
+    btn.textContent =  `Run ${count}`;
+        progBar.style.animation = `progress 2s linear ${count}`;
+        console.log(progBar.style.animation)
+   }   
+   progBar.onanimationend = (event)=>{
+        progBar.style.animation = "none";
+        btn.textContent =  `Run`;
+    } 
+    function animate(){
+        console.log(count);
+        btn.textContent =  `Run ${count}`;
+        progBar.style.animation = `progress 2s linear ${count}`;
+    }
+  
+  
+</script>
+
+</html>

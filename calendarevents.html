@@ -1,0 +1,293 @@
+
+<html>
+
+<head>
+    <style>
+      body{
+        display:flex;
+        justify-content: center;
+        flex-direction: column;
+      }
+      button{
+        width:100px;
+        margin: 10px auto;
+      }
+
+        section{
+            width:600px;
+            border:1px solid black;
+            color:rgb(97, 96, 96);
+            margin:auto;
+            font-family:'Trebuchet MS', sans-serif;
+            position:relative;
+            box-sizing: border-box;
+            padding-top:30px;
+        }
+        section > div{
+            display: flex;
+            align-items: center;
+            padding: 6px;
+        }
+        span:first-child{
+                width:70px;
+                text-align: right;
+                margin-right: 5px;
+        }
+        .line{
+            border:0;
+            height:1px;
+            background-color:grey;
+            width:100%;
+        }
+        .event{
+            position: absolute;
+            padding: 0;
+            width: 517px;
+            left: 74px;
+            color:white;
+            display: flex;
+            align-items: start;
+            flex-direction: column;
+            flex-wrap: wrap;
+            font-size: 12px;
+            box-shadow: -2px -2px white;
+            border-radius: 5px;
+        }
+        .event>p{
+            display: block;
+            margin:0;
+        }
+       
+       
+    </style>  
+</head>
+<body>
+    <button>Toggle Day</button>
+<section>
+</section>
+</body>
+<script> 
+const calSection = document.querySelector("section");
+let isData1=true;
+let evnt=[];
+let data1=[
+    {
+      startTime: "0:00",
+      endTime: "1:30",
+      color: "#f6be23",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "3:30",
+      endTime: "7:30",
+      color: "#f6501e",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "4:30",
+      endTime: "8:30",
+      color: "#f6501e",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "6:30",
+      endTime: "9:00",
+      color: "#f6501e",
+      title: "Demo",
+    },
+    {
+      startTime: "11:00",
+      endTime: "13:30",
+      color: "#029be5",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "12:00",
+      endTime: "13:30",
+      color: "#029be5",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "9:30",
+      endTime: "10:30",
+      color: "#029be5",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "16:00",
+      endTime: "17:00",
+      color: "#029be5",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "15:00",
+      endTime: "17:00",
+      color: "#029be5",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "18:00",
+      endTime: "19:00",
+      color: "#f6501e",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "20:30",
+      endTime: "22:30",
+      color: "#029be5",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "20:30",
+      endTime: "22:30",
+      color: "#029be5",
+      title: "#TeamDevkode",
+    },
+  ];
+let data2 = [
+    {
+      startTime: "0:00",
+      endTime: "1:30",
+      color: "#f6be23",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "4:30",
+      endTime: "7:30",
+      color: "#f6501e",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "12:00",
+      endTime: "13:30",
+      color: "#029be5",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "9:00",
+      endTime: "10:00",
+      color: "#029be5",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "16:00",
+      endTime: "19:00",
+      color: "#029be5",
+      title: "#TeamDevkode",
+    },
+    {
+      startTime: "20:30",
+      endTime: "22:30",
+      color: "#029be5",
+      title: "#TeamDevkode",
+    },
+  ];
+
+function createCal(prefix){
+   for(let i=1;i<=12;i++){
+    let div = document.createElement('div');
+    div.id = prefix.toUpperCase() == "AM" ?  i+":00" : (i==12 ? "00:00" : (12+i)+":00");
+    let span1 = document.createElement('span');
+    span1.innerText =i+":00"+prefix; 
+    let span2 = document.createElement('span');
+    span2.className = "line";
+    div.append(span1);
+    div.append(span2);
+    calSection.append(div);
+   }
+}
+function paintEvent(top, height, color, title, time, marginLft=0){
+    let div1 = document.createElement('div');
+    div1.style.backgroundColor=color;
+    div1.style.top=top;
+    div1.className="event";
+    div1.style.height=height;
+    div1.style.marginLeft=marginLft+"px";
+    div1.style.width=(517-marginLft) +"px";
+    let p1 = document.createElement('p');
+    p1.innerText=title;
+    let p2 = document.createElement('p');
+    p2.innerText=time;
+    div1.append(p1);
+    div1.append(p2);
+    calSection.append(div1);    
+}
+function event(){
+  let data;
+  data = isData1? data1 :data2;
+  findOverlap(data);
+  for(let i=0;i<data.length;i++){    
+    let stMins = false;
+    let etMins = false;
+    let st = data[i].startTime;
+    if(hasMins(st)){
+      stMins = true;
+      st=st.replace("30","00");
+    }
+    let et = data[i].endTime;
+    if(hasMins(et)){
+      etMins = true;
+      et=et.replace("30","00");
+    }
+
+    let top;
+    if(st=="0:00") top = document.getElementById("1:00").querySelector(".line").offsetTop - 30;
+    else top = document.getElementById(st).querySelector(".line").offsetTop;
+    let bottom = document.getElementById(et).querySelector(".line").offsetTop;
+
+    stMins && (top = top+15);
+    etMins && (bottom = bottom+15);
+
+    let time = data[i].startTime +"-"+ data[i].endTime;
+
+    paintEvent(top, bottom-top+1, data[i].color, data[i].title, time, data[i].score*100);
+  }
+}
+function hasMins(t){
+    return Number(t.substring(t.length-2,t.length+1))!=0;
+}
+function findOverlap(data){
+  for(let i=0;i<data.length;i++){  
+    let st = getNum(data[i].startTime);
+    let et = getNum(data[i].endTime);
+    evnt.push([st,et]);
+    let startArray = evnt.map(a=>a[0]);
+    data[i].score=getEvntScore(startArray,st,et);
+  }
+  console.log(data);
+  return data;
+}
+function getNum(t){
+  let k= Number(t.replace("\:","\."));
+  return isFraction(k) ? k + 0.2 : k;
+}
+function getEvntScore(startArray,st,et){
+  let prevStarts = [...startArray].filter(a=> a<=et );
+  let score = 0;
+  for(let i=0;i<prevStarts.length;i++){
+    if(evnt[startArray.indexOf(prevStarts[i])][1] > st) score++;
+    console.log(evnt[startArray.indexOf(prevStarts[i])], st, evnt[startArray.indexOf(prevStarts[i])][1]> st,score);
+  }
+  return score-1;
+
+}
+
+isFraction=(k)=>k-Math.floor(k) != 0;
+
+
+let btn=document.querySelector("button");
+btn.onclick= ()=>{
+    isData1=!isData1;    
+    evnt=[];
+    calSection.textContent = '';
+    createCal("AM");
+    createCal("PM"); 
+    event();
+}
+
+createCal("AM");
+createCal("PM"); 
+event();
+</script>
+
+</html>

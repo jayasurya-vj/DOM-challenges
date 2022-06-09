@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chess Board</title>
+      <style>
+        #grid{
+            font-size: xxx-large;
+            margin: auto auto !important;            
+            background:white;
+            cursor:default !important;
+        }
+    </style>
+
+   
+</head>
+<body>
+    <p style="width:100vw;text-align:center">click on any square to highlight the diagonal squares</p>
+   <div id="grid"></div>
+    
+</body>
+<script>
+       let colrHighlight = "red";
+       let visited;
+    (function PixelArt(el, rows, cols) {
+    const grid= document.querySelector(el);
+    grid.style.display="grid";
+    grid.style.grid= new Array(rows).fill("auto").join(' ') +"/" +new Array(cols).fill("auto").join(' ');
+    grid.style.gap="0";
+    grid.style.maxWidth="644px";
+    grid.style.minHeight="644px";
+    grid.style.border="5px solid black";
+    grid.style.padding="2px";
+    
+    for(let c=0;c<cols;c++){
+        for(let r=0;r<rows;r++){
+        let div=document.createElement('div');
+        div.style.cursor="default !important";
+        div.setAttribute('id',(c*10)+r);
+        div.style.minWidth= "8 px";
+        div.style.minHeight= "8 px";
+        div.style.backgroundColor= (c%2==0 && r%2==0) || (c%2!=0 && r%2!=0 ) ? "white":"black";
+        div.addEventListener('click',(event)=>{
+            visited=new Array(78).fill(false);
+            console.log(event.target.id);
+            reset();
+            recurHighlight(Number(event.target.id));
+            
+        })        
+        grid.append(div);
+        }
+    }
+    })("#grid", 8, 8);
+
+    function reset(){
+        for(let c=0;c<8;c++){
+          for(let r=0;r<8;r++){   
+            let div=document.getElementById((c*10)+r);         
+           div.style.backgroundColor= (c%2==0 && r%2==0) || (c%2!=0 && r%2!=0 ) ? "white":"black";
+          }
+        }
+     }
+    function recurHighlight(id,inc=0){
+        console.log(id,inc);
+        if(id<0 || id>77 || id%10 > 7 || visited[id]) return;
+        visited[id]=true;
+        
+        if(inc==0){
+            console.log(id+9,id+11,id-9,id-11);
+            recurHighlight(id-9,-9);  
+            recurHighlight(id-11,-11);
+            recurHighlight(id+9,9);
+            recurHighlight(id+11,11);
+        }else{
+            recurHighlight(id+inc,inc);
+        }
+        highlight(id);
+    }
+
+    function highlight(id){
+        document.getElementById(id).style.background=colrHighlight;
+    }
+   
+
+  
+  </script>
+
+</html>

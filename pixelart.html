@@ -1,0 +1,91 @@
+
+<html lang="en">
+
+<head>
+    <title>Pixel Art</title>
+      <style>
+       
+        
+        #grid{
+            font-size: xxx-large;
+            margin: auto auto !important;            
+            background:white;
+            cursor:default !important;
+        }
+       
+    </style>
+
+   
+</head>
+<body>
+    <p style="width:100vw;text-align:center">select color and fill the grid</p>
+  
+    <div id="grid"></div>
+    
+</body>
+<script>
+       let colrSelected = "violet";
+       let draw=false;
+    function PixelArt(el, rows, cols) {
+    const grid= document.querySelector(el);
+    grid.style.display="grid";
+    grid.style.grid= new Array(rows).fill("auto").join(' ') +"/" +new Array(cols).fill("auto").join(' ');
+    grid.style.gap="0";
+    grid.style.maxWidth="70%";
+    grid.style.minHeight="80%";
+    
+    for(let c=0;c<cols;c++){
+        for(let r=0;r<rows;r++){
+        let div=document.createElement('div');
+        div.style.cursor="default !important";
+        div.setAttribute('id',(c*10)+r);
+        div.style.border="1px solid black";
+        div.style.minWidth= 100/cols+"px";
+        div.style.minHeight= 100/rows+"px" ;
+        div.addEventListener('click',(event)=>{
+            event.target.style.background=colrSelected;
+        })
+        div.addEventListener('mouseover',(event)=>{
+            if(draw) event.target.style.background=colrSelected;
+        })
+        div.addEventListener('mousedown',(event)=>{
+            draw=true;
+        })
+        div.addEventListener('mouseup',(event)=>{
+            draw=false;
+        })
+        
+        grid.append(div);
+        }
+    }
+    const body=document.querySelector('body');
+    const colrPicker= document.createElement('div');
+    colrPicker.id="colrPicker";
+    colrPicker.style.display="grid";
+    colrPicker.style.gridTemplateColumns= new Array(7).fill("auto").join(' ');
+    colrPicker.style.margin="30px 50px";
+    body.append(colrPicker);
+
+    const colr=["violet","indigo","blue","green","yellow","orange","red"];
+    for(let p=0;p<7;p++){        
+        let div=document.createElement('div');
+        div.setAttribute('class',"color-picker");
+        div.style.border="1px solid black";
+        div.style.minWidth= "50px";
+        div.style.minHeight= "50px" ;  
+        div.style.background= colr[p];   
+        
+        div.onclick=(event)=>{
+            colrSelected=event.target.style.background;
+            console.log(colrSelected);
+        }
+        colrPicker.append(div);
+        }
+
+    }
+    new PixelArt("#grid", 20, 20);
+
+  
+  </script>
+
+</html>

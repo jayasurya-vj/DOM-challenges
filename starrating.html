@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Star  Rating</title>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <style>
+        .fa-star-o:before {
+            content: "\f006";
+            color: #5f6368;
+        }
+
+        .fa-star:before {
+            content: "\f005";
+            color: #d56e0c;
+        }
+        #star{
+            font-size: xxx-large;
+            display:flex;
+            justify-content: center;
+        }
+    </style>
+
+   
+</head>
+<body>
+<div id="star"></div>
+<div id="display-star"></div>
+<p style="width:100vw;text-align:center">click or hover over stars</p>
+</body>
+<script>
+        
+    let starHover=true;
+    let starClickedId=-1;
+  
+  function Star(el, count, callback) {
+    const star = document.querySelector(el);
+    console.log(star);
+    for(i=0;i<count;i++){
+      let starEmpty= document.createElement('i');
+      starEmpty.setAttribute("class","fa fa-star-o");
+      starEmpty.setAttribute("id",i);
+      
+      
+      starEmpty.onmouseover = (event)=>{
+      starHover=true;
+      let starEmptyId=event.target.id;
+      for(j=0;j<=starEmptyId;j++)
+      document.getElementById(j).setAttribute("class","fa fa-star");  
+      }
+      
+      starEmpty.onmouseout = (event)=>{ 
+      if(!starHover) return;
+      for(j=0;j<count;j++)
+      {
+      if( j > starClickedId)
+      document.getElementById(j).setAttribute("class","fa fa-star-o");
+      }
+      }
+      
+      
+      
+      starEmpty.onclick = (event)=>{
+      starHover=false;
+      let starEmptyId=event.target.id;
+      starClickedId= +(starEmptyId);  
+      for(j=0;j<count;j++){
+      if(j<=starEmptyId) 
+      document.getElementById(j).setAttribute("class","fa fa-star");
+      else
+      document.getElementById(j).setAttribute("class","fa fa-star-o");
+      }
+      
+     }
+    
+    star.appendChild(starEmpty);  
+    }
+  }
+  
+  
+  
+  
+  function getStar(value){
+    document.getElementById("display-star").innerHTML = value;
+  }
+  new Star("#star", 5, getStar);
+  
+  </script>
+
+</html>

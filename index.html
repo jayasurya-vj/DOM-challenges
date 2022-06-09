@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DOM Challenges</title>
+    <link rel="stylesheet" href="core.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="index.js" type="module" defer></script>
+  </head>
+  <body>
+    <div class="container text-center">
+      <h1>
+        DOM Challenges
+        <a href="https://github.com/jayasurya-vj/DOM-challenges/"
+          ><img
+            src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+            alt="github repo"
+        /></a>
+      </h1>
+      <main class="grid challenge-grid" id="challengeGrid"></main>
+    </div>
+  </body>
+  <script>
+      const challenges = [
+  { title: "Chess Board", link: "chessboard.html" },
+  { title: "Calendar Events", link: "calendarevents.html" },
+  { title: "Color Spotter Game", link: "colorSpotter.html" },
+  { title: "Calendar", link: "calendar.html" },
+  { title: "Memory Game", link: "memorygame.html" },
+  { title: "Pixel Art", link: "pixelart.html" },
+  { title: "Progressbar", link: "progressbar.html" },
+  { title: "Star Rating", link: "starrating.html" }
+];
+
+const createAnchorElement = (obj) => {
+  const a = document.createElement("a");
+  a.textContent = obj.title;
+  a.href = `./${obj.link}`;
+
+  if (obj.link === "#") {
+    a.classList.add("disabled");
+    a.title = "To be developed";
+    a.href = "#";
+  }
+
+  return a;
+};
+
+const challengeGridEl = document.getElementById("challengeGrid");
+challenges
+  .map(createAnchorElement)
+  .forEach((el) => challengeGridEl.appendChild(el));
+
+  </script>
+</html>
