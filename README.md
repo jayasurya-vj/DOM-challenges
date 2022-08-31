@@ -1,5 +1,5 @@
 
-#DOM-challenges
+#DOMchallenges
 
 Contains my solutions for the LinkedIn famous #DOMchallenges (https://github.com/devkodeio/the-dom-challenge) by @sunnypuri. Completed the challenges using only HTML, CSS and Vanilla Javascript.
 
